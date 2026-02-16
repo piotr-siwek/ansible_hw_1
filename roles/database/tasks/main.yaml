@@ -1,0 +1,26 @@
+---
+- name: Install MySql
+  ansible.builtin.apt:
+    name: mysql-server
+    state: present
+    update_cache: true
+
+- name: Ensure MySql is runnnig
+  ansible.builtin.service:
+    name: mysql-server
+    state: started
+    enabled: true
+
+- name: Create a new database with name 'praca_domowa'
+  community.mysql.mysql_db:
+    name: praca_domowa
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: Create new db user
+  community.mysql.mysql_user:
+    name: app_user
+    password: app_user
+    priv: "praca_domowa.*:ALL"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock

@@ -1,0 +1,12 @@
+---
+- name: Install apache2
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: true
+
+- name: Ensure apache2 is runnnig
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
