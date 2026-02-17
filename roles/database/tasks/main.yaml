@@ -43,7 +43,7 @@
   become: true
   community.mysql.mysql_query:
     login_unix_socket: "{{ database_login_socket }}"
-    db: "{{ database_name_value }}"
+    login_db: "{{ database_name_value }}"
     query: >
       CREATE TABLE IF NOT EXISTS {{ database_table_name }} (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,7 +54,7 @@
   become: true
   community.mysql.mysql_query:
     login_unix_socket: "{{ database_login_socket }}"
-    db: "{{ database_name_value }}"
+    login_db: "{{ database_name_value }}"
     query: >
       INSERT INTO {{ database_table_name }} (message)
       SELECT 'Hello from MySQL via Ansible'
