@@ -1,5 +1,6 @@
 ---
-- name: Restart MySql
+- name: Restart cron
+  become: true
   ansible.builtin.service:
-    name: mysql-server
+    name: cron
     state: restarted

@@ -1,0 +1,7 @@
+---
+base_packages:
+  - cron
+  - curl
+  - vim
+base_motd_message: |
+  Witaj na serwerze zarządzanym przez Ansible.

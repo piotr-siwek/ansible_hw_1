@@ -1,4 +1,13 @@
----
-name: X
-roles:
-  - web
+- name: Minimal LAMP demo
+  hosts: web_server
+  become: true
+  vars:
+    database_name: lamp_demo
+    database_user: lamp_user
+    database_password: lamp_password
+  roles:
+    - base
+    - web
+    - php
+    - database
+    - app

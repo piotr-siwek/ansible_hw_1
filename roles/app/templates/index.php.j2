@@ -1,0 +1,39 @@
+<?php
+$host = '{{ app_db_host }}';
+$db   = '{{ app_db_name }}';
+$user = '{{ app_db_user }}';
+$pass = '{{ app_db_password }}';
+$dsn  = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    $stmt = $pdo->query("SELECT message FROM {{ app_table_name }} LIMIT 5");
+    $rows = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $error = $e->getMessage();
+}
+?>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>LAMP demo</title>
+</head>
+<body>
+<h1>Połączenie PHP + MySQL</h1>
+<?php if(isset($error)): ?>
+    <p>Błąd połączenia: <?php echo htmlspecialchars($error); ?></p>
+<?php elseif(empty($rows)): ?>
+    <p>Brak danych w tabeli.</p>
+<?php else: ?>
+    <ul>
+        <?php foreach ($rows as $row): ?>
+            <li><?php echo htmlspecialchars($row['message']); ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+</body>
+</html>

@@ -1,0 +1,17 @@
+---
+- name: Install PHP packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ php_packages }}"
+    state: present
+    update_cache: true
+
+- name: Deploy PHP overrides
+  become: true
+  ansible.builtin.template:
+    src: php.ini.j2
+    dest: "{{ php_conf_dir }}/{{ php_custom_ini }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Apache (PHP)

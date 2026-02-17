@@ -1,0 +1,19 @@
+---
+- name: Ensure application docroot exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ app_docroot }}"
+    state: directory
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+
+- name: Deploy demo application
+  become: true
+  ansible.builtin.template:
+    src: index.php.j2
+    dest: "{{ app_docroot }}/{{ app_index_file }}"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+    mode: "0644"
+  notify: Reload Apache (app)

@@ -1,0 +1,11 @@
+---
+database_packages:
+  - mysql-server
+  - python3-pymysql
+database_service: mysql
+database_login_socket: /var/run/mysqld/mysqld.sock
+database_name_value: "{{ database_name | default('lamp_demo') }}"
+database_user_value: "{{ database_user | default('lamp_user') }}"
+database_password_value: "{{ database_password | default('lamp_password') }}"
+database_table_name: demo_messages
+database_bind_address: 127.0.0.1

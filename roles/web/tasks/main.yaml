@@ -1,12 +1,33 @@
 ---
-- name: Install apache2
+- name: Install Apache
+  become: true
   ansible.builtin.apt:
-    name: apache2
+    name: "{{ web_package }}"
     state: present
     update_cache: true
 
-- name: Ensure apache2 is runnnig
+- name: Ensure document root exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ web_docroot }}"
+    state: directory
+    owner: "{{ web_owner }}"
+    group: "{{ web_group }}"
+    mode: "0755"
+
+- name: Deploy minimal virtual host
+  become: true
+  ansible.builtin.template:
+    src: vhost.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Apache
+
+- name: Ensure Apache is running
+  become: true
   ansible.builtin.service:
-    name: apache2
+    name: "{{ web_service }}"
     state: started
     enabled: true

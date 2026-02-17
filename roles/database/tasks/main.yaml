@@ -1,26 +1,63 @@
----
-- name: Install MySql
+- name: Install database packages
+  become: true
   ansible.builtin.apt:
-    name: mysql-server
+    name: "{{ database_packages }}"
     state: present
     update_cache: true
 
-- name: Ensure MySql is runnnig
+- name: Ensure MySQL is running
+  become: true
   ansible.builtin.service:
-    name: mysql-server
+    name: "{{ database_service }}"
     state: started
     enabled: true
 
-- name: Create a new database with name 'praca_domowa'
-  community.mysql.mysql_db:
-    name: praca_domowa
-    state: present
-    login_unix_socket: /run/mysqld/mysqld.sock
+- name: Deploy minimal MySQL config
+  become: true
+  ansible.builtin.template:
+    src: lamp.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/99-lamp.cnf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart MySQL
 
-- name: Create new db user
-  community.mysql.mysql_user:
-    name: app_user
-    password: app_user
-    priv: "praca_domowa.*:ALL"
+- name: Ensure database exists
+  become: true
+  community.mysql.mysql_db:
+    name: "{{ database_name_value }}"
     state: present
-    login_unix_socket: /run/mysqld/mysqld.sock
+    login_unix_socket: "{{ database_login_socket }}"
+
+- name: Ensure database user exists
+  become: true
+  community.mysql.mysql_user:
+    name: "{{ database_user_value }}"
+    password: "{{ database_password_value }}"
+    priv: "{{ database_name_value }}.*:ALL"
+    state: present
+    host: "localhost"
+    login_unix_socket: "{{ database_login_socket }}"
+
+- name: Ensure demo table exists
+  become: true
+  community.mysql.mysql_query:
+    login_unix_socket: "{{ database_login_socket }}"
+    db: "{{ database_name_value }}"
+    query: >
+      CREATE TABLE IF NOT EXISTS {{ database_table_name }} (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        message VARCHAR(255) NOT NULL
+      );
+
+- name: Insert sample message
+  become: true
+  community.mysql.mysql_query:
+    login_unix_socket: "{{ database_login_socket }}"
+    db: "{{ database_name_value }}"
+    query: >
+      INSERT INTO {{ database_table_name }} (message)
+      SELECT 'Hello from MySQL via Ansible'
+      WHERE NOT EXISTS (
+        SELECT 1 FROM {{ database_table_name }}
+      );

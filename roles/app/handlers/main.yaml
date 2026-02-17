@@ -1,0 +1,6 @@
+---
+- name: Reload Apache (app)
+  become: true
+  ansible.builtin.service:
+    name: "{{ app_web_service }}"
+    state: reloaded

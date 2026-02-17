@@ -1,0 +1,11 @@
+---
+app_docroot: /var/www/html
+app_owner: www-data
+app_group: www-data
+app_index_file: index.php
+app_web_service: apache2
+app_db_host: localhost
+app_db_name: "{{ database_name | default('lamp_demo') }}"
+app_db_user: "{{ database_user | default('lamp_user') }}"
+app_db_password: "{{ database_password | default('lamp_password') }}"
+app_table_name: demo_messages
