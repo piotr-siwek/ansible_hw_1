@@ -1,0 +1,2 @@
+[web_server]
+192.168.1.26 ansible_user=devops ansible_port=7655 ansible_password=devops ansible_become_password=devops

@@ -1,40 +1,9 @@
 - name: Minimal LAMP demo
   hosts: web_server
-  become: true
   vars:
     database_name: lamp_demo
     database_user: lamp_user
     database_password: lamp_password
-    target_env: "{{ env | default('dev') }}"
-    allowed_envs:
-      - dev
-      - staging
-      - prod
-  pre_tasks:
-    - name: Validate selected environment
-      ansible.builtin.assert:
-        that:
-          - target_env in allowed_envs
-        fail_msg: "Podane środowisko ({{ target_env }}) nie jest wspierane. Dostępne: {{ allowed_envs | join(', ') }}."
-      tags: ["always"]
-
-    - name: Load development environment vars
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/group_vars/dev.yaml"
-      when: target_env == 'dev'
-      tags: ["env_dev"]
-
-    - name: Load staging environment vars
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/group_vars/staging.yaml"
-      when: target_env == 'staging'
-      tags: ["env_staging"]
-
-    - name: Load production environment vars
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/group_vars/prod.yaml"
-      when: target_env == 'prod'
-      tags: ["env_prod"]
 
   roles:
     - role: base
@@ -52,9 +21,9 @@
     - name: Assert debug settings match environment policy
       ansible.builtin.assert:
         that:
-          - (target_env == 'dev' and app_debug | bool) or
-            (target_env != 'dev' and not (app_debug | bool))
-        fail_msg: "Tryb debug nie zgadza się z oczekiwaniami dla środowiska {{ target_env }}."
+          - (env_name == 'dev' and app_debug | bool) or
+            (env_name != 'dev' and not (app_debug | bool))
+        fail_msg: "Tryb debug nie zgadza się z oczekiwaniami dla środowiska {{ env_name }}."
       tags: ["tests"]
 
     - name: Assert PHP error visibility follows policy
@@ -62,7 +31,7 @@
         that:
           - ((app_debug | bool) and php_display_errors == 'On') or
             (not (app_debug | bool) and php_display_errors == 'Off')
-        fail_msg: "Ustawienia PHP display_errors są niespójne ze środowiskiem {{ target_env }}."
+        fail_msg: "Ustawienia PHP display_errors są niespójne ze środowiskiem {{ env_name }}."
       tags: ["tests"]
 
     - name: Assert HTTP port matches expectation
