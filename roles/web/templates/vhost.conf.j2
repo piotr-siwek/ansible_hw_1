@@ -9,6 +9,13 @@
     </Directory>
 
     DirectoryIndex index.php index.html
+{% if web_security_headers | length > 0 %}
+    <IfModule mod_headers.c>
+{% for header in web_security_headers %}
+        Header set "{{ header.name }}" "{{ header.value }}"
+{% endfor %}
+    </IfModule>
+{% endif %}
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>

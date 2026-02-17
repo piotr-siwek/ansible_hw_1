@@ -1,0 +1,14 @@
+---
+env_name: staging
+app_debug: false
+web_security_headers:
+  - name: X-Content-Type-Options
+    value: "nosniff"
+  - name: X-Frame-Options
+    value: "SAMEORIGIN"
+  - name: X-XSS-Protection
+    value: "1; mode=block"
+php_display_errors: "Off"
+php_error_reporting: E_ALL & ~E_DEPRECATED & ~E_STRICT
+database_bind_address: 127.0.0.1
+assert_expected_port: 80

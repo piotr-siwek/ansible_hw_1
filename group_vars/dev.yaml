@@ -1,0 +1,10 @@
+---
+env_name: dev
+app_debug: true
+web_security_headers:
+  - name: X-Content-Type-Options
+    value: "nosniff"
+php_display_errors: "On"
+php_error_reporting: E_ALL
+database_bind_address: 0.0.0.0
+assert_expected_port: 80

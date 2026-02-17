@@ -6,4 +6,7 @@ web_owner: www-data
 web_group: www-data
 web_server_name: lamp-demo.local
 web_listen_port: 80
-web_php_module: php8.1
+web_security_headers: []
+web_extra_packages: []
+web_extra_modules:
+  - headers

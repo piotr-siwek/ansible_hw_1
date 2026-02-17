@@ -24,6 +24,7 @@ try {
 </head>
 <body>
 <h1>Połączenie PHP + MySQL</h1>
+<p>Środowisko: <strong>{{ app_environment_label }}</strong></p>
 <?php if(isset($error)): ?>
     <p>Błąd połączenia: <?php echo htmlspecialchars($error); ?></p>
 <?php elseif(empty($rows)): ?>

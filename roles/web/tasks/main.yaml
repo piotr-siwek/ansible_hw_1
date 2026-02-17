@@ -2,7 +2,7 @@
 - name: Install Apache
   become: true
   ansible.builtin.apt:
-    name: "{{ web_package }}"
+    name: "{{ [web_package] + (web_extra_packages | default([])) }}"
     state: present
     update_cache: true
 
@@ -23,6 +23,14 @@
     owner: root
     group: root
     mode: "0644"
+  notify: Restart Apache
+
+- name: Enable required Apache modules
+  become: true
+  community.general.apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ web_extra_modules|default([]) }}"
   notify: Restart Apache
 
 - name: Ensure Apache is running
