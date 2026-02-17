@@ -733,5 +733,3 @@ Ten projekt demonstruje **best practices Ansible** dla środowisk wielośrodowis
 6. **Firewall** – rola dla ufw/iptables
 7. **Logrotate** – rotacja logów Apache/MySQL
 8. **Fail2ban** – ochrona przed brute-force
-
-Jest to **minimalna, ale kompletna** implementacja stosu LAMP zgodna z best practices Ansible, gotowa do użycia w produkcji (po zaszyfrowaniu haseł) i łatwa do rozbudowy.
